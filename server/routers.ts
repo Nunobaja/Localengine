@@ -4,9 +4,33 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
+import { invokeLLM } from "./_core/llm";
 
 export const appRouter = router({
   system: systemRouter,
+
+  // ========== BIO PAGE ==========
+  bioPage: router({
+    chat: publicProcedure
+      .input(
+        z.object({
+          messages: z.array(
+            z.object({
+              role: z.enum(["system", "user", "assistant"]),
+              content: z.string(),
+            })
+          ),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const result = await invokeLLM({ messages: input.messages });
+        const msg = result.choices[0]?.message;
+        return {
+          role: msg?.role ?? "assistant",
+          content: typeof msg?.content === "string" ? msg.content : JSON.stringify(msg?.content),
+        };
+      }),
+  }),
   
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

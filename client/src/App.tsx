@@ -14,6 +14,7 @@ import Referrals from "./pages/Referrals";
 import Campaigns from "./pages/Campaigns";
 import Automations from "./pages/Automations";
 import Settings from "./pages/Settings";
+import BioPage from "./pages/BioPage";
 
 function Router() {
   return (
@@ -28,6 +29,7 @@ function Router() {
       <Route path={"/campaigns"} component={Campaigns} />
       <Route path={"/automations"} component={Automations} />
       <Route path={"/settings"} component={Settings} />
+      <Route path={"/bio-page"} component={BioPage} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
